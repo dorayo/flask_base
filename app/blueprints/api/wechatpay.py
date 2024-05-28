@@ -5,7 +5,7 @@ from app.services import wechatpay_service
 from app.services.auth_service import token_auth
 from app.schemas.wechatpay_schemas import WeChatPaySchema
 
-@api.route('/wechat/pay', methods=['POST'])
+@api.route('/wechatpay', methods=['POST'])
 @handle_api_call
 def wechat_h5_pay():
     """
@@ -28,14 +28,18 @@ def wechat_h5_pay():
         return json_response(code=RET.SERVERERR, detailMsg="微信支付错误")
     
 
-@api.route('/wechat/pay/notify', methods=['POST'])
+@api.route('/wechatpay/notify', methods=['POST'])
 @handle_api_call
 def wechat_pay_notify():
     """
-    微信支付通知
+    微信支付通知接口
     """
     result = wechatpay_service.notify(request)
     if not result:
-        return json_response(code=RET.SERVERERR)
-    return json_response(code=RET.OK, data=result)
+        err_message = {  
+            "code": "FAIL",
+            "message": "失败"
+        }
+        return json_response(code=RET.SERVERERR,data=err_message)
+    return json_response(code=RET.OK)
 

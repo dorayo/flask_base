@@ -21,7 +21,7 @@ APIV3_KEY = 'MIIEvwIBADANBgkqhkiG9w0BAQE...'
 APPID = 'wxd678efh567hg6787'
 
 # 回调地址，也可以在调用接口的时候覆盖。
-NOTIFY_URL = 'https://www.xxxx.com/notify'
+NOTIFY_URL = 'https://www.xxxx.com/api/wechatpay/notify'
 
 # 接入模式：False=直连商户模式，True=服务商模式。
 PARTNER_MODE = False
@@ -82,5 +82,5 @@ def notify(request):
         else:
             return {'code': 'FAILED', 'message': '失败'}
     except Exception as e:
-        current_app.logger.error(f"微信支付通知失败：{e}")
+        current_app.logger.error(f"获取微信支付通知失败：{e}")
         return None
