@@ -41,3 +41,15 @@ def validate_password(value):
     # 检查密码是否包含至少一个大写字母
     if not re.search(r'[A-Z]', value):
         raise ValidationError('密码必须包含至少一个大写字母')
+    
+def validate_code(value):
+    """
+    验证6位数字验证码。
+    Args:
+        value (str): 输入的验证码字符串。
+    
+    Raises:
+        ValidationError: 如果验证码不符合要求，则抛出验证错误。
+    """
+    if not re.match(r'^\d{6}$', value):
+        raise ValidationError('验证码必须是6位数字')
