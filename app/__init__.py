@@ -62,7 +62,7 @@ def create_app():
         global redis_store 
         redis_store = StrictRedis(host=config_cls.REDIS_HOST, port=config_cls.REDIS_PORT,
                                         db=config_cls.REDIS_DB, password=config_cls.REDIS_PASSWORD)
-
+        app.config['REDIS_STORE'] = redis_store
     return app
 
 def register_blueprints(app):

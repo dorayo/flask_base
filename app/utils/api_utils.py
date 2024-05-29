@@ -61,7 +61,6 @@ def json_response(code=RET.OK, detailMsg=None, data=None, headers=None):
         'Access-Control-Allow-Methods': 'GET, POST',
         'Access-Control-Allow-Headers': 'x-requested-with,content-type'
     })
-
     if headers:
         response.headers.update(headers)
 

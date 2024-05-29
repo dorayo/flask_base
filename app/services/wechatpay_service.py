@@ -26,61 +26,62 @@ NOTIFY_URL = 'https://www.xxxx.com/api/wechatpay/notify'
 # 接入模式：False=直连商户模式，True=服务商模式。
 PARTNER_MODE = False
 
-wxpay = WeChatPay(
-    mchid=MCHID,
-    # private_key=PRIVATE_KEY,
-    cert_serial_no=CERT_SERIAL_NO,
-    apiv3_key=APIV3_KEY,
-    appid=APPID,
-    notify_url=NOTIFY_URL,
-    partner_mode=PARTNER_MODE)
+# wxpay = WeChatPay(
+#     mchid=MCHID,
+#     wechatpay_type=WeChatPayType.H5,
+#     private_key=PRIVATE_KEY,
+#     cert_serial_no=CERT_SERIAL_NO,
+#     apiv3_key=APIV3_KEY,
+#     appid=APPID,
+#     notify_url=NOTIFY_URL,
+#     partner_mode=PARTNER_MODE)
 
-def h5_pay(payer_client_ip,amount=1,description="无",h5_info_type="Wap"):
-    '''
-    微信H5支付下单
-    '''
-    out_trade_no = ''.join(sample(ascii_letters + digits, 8))
-    scene_info = {
-                'payer_client_ip': payer_client_ip,
-                'h5_info': {
-                    'type': h5_info_type
-                }}
-    code, message = wxpay.pay(
-        description=description,
-        out_trade_no=out_trade_no,
-        amount={'total': int(amount)},
-        pay_type=WeChatPayType.H5,
-        scene_info=scene_info
-    )
-    if code == 200:
-        return message['code_url']
-    else:
-        current_app.logger.error(f"微信支付下单失败：{message}")
-        return None
+# def h5_pay(payer_client_ip,amount=1,description="无",h5_info_type="Wap"):
+#     '''
+#     微信H5支付下单
+#     '''
+#     out_trade_no = ''.join(sample(ascii_letters + digits, 8))
+#     scene_info = {
+#                 'payer_client_ip': payer_client_ip,
+#                 'h5_info': {
+#                     'type': h5_info_type
+#                 }}
+#     code, message = wxpay.pay(
+#         description=description,
+#         out_trade_no=out_trade_no,
+#         amount={'total': int(amount)},
+#         pay_type=WeChatPayType.H5,
+#         scene_info=scene_info
+#     )
+#     if code == 200:
+#         return message['code_url']
+#     else:
+#         current_app.logger.error(f"微信支付下单失败：{message}")
+#         return None
 
-def notify(request):
-    '''
-        微信支付通知
-    '''
-    try:
-        result = wxpay.callback(request.headers, request.data)
-        if result and result.get('event_type') == 'TRANSACTION.SUCCESS':
-            resp = result.get('resource')
-            appid = resp.get('appid')
-            mchid = resp.get('mchid')
-            out_trade_no = resp.get('out_trade_no')
-            transaction_id = resp.get('transaction_id')
-            trade_type = resp.get('trade_type')
-            trade_state = resp.get('trade_state')
-            trade_state_desc = resp.get('trade_state_desc')
-            bank_type = resp.get('bank_type')
-            attach = resp.get('attach')
-            success_time = resp.get('success_time')
-            payer = resp.get('payer')
-            amount = resp.get('amount').get('total')
-            return {'code': 'SUCCESS', 'message': '成功'}
-        else:
-            return {'code': 'FAILED', 'message': '失败'}
-    except Exception as e:
-        current_app.logger.error(f"获取微信支付通知失败：{e}")
-        return None
+# def notify(request):
+#     '''
+#         微信支付通知
+#     '''
+#     try:
+#         result = wxpay.callback(request.headers, request.data)
+#         if result and result.get('event_type') == 'TRANSACTION.SUCCESS':
+#             resp = result.get('resource')
+#             appid = resp.get('appid')
+#             mchid = resp.get('mchid')
+#             out_trade_no = resp.get('out_trade_no')
+#             transaction_id = resp.get('transaction_id')
+#             trade_type = resp.get('trade_type')
+#             trade_state = resp.get('trade_state')
+#             trade_state_desc = resp.get('trade_state_desc')
+#             bank_type = resp.get('bank_type')
+#             attach = resp.get('attach')
+#             success_time = resp.get('success_time')
+#             payer = resp.get('payer')
+#             amount = resp.get('amount').get('total')
+#             return {'code': 'SUCCESS', 'message': '成功'}
+#         else:
+#             return {'code': 'FAILED', 'message': '失败'}
+#     except Exception as e:
+#         current_app.logger.error(f"获取微信支付通知失败：{e}")
+#         return None
