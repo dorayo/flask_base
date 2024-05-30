@@ -8,4 +8,4 @@ from flask import Blueprint
 # 创建蓝图对象 api
 api = Blueprint('api', __name__)
 
-from . import users, sms
+from . import users, sms,obs
