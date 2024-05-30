@@ -7,7 +7,6 @@ import os
 import random
 from flask import current_app
 
-
 def generate_verification_code(length=6):
     code = ''.join(random.choices('0123456789', k=length))
     return code
@@ -28,8 +27,6 @@ def send_sms(mobile):
 
     code = generate_verification_code()
     TEMPLATE_PARAM =  f'["{code}"]'
-    print("====")
-    print(sender,receiver,TEMPLATE_ID,TEMPLATE_PARAM,statusCallBack,signature)
     formData = urllib.parse.urlencode({
         'from': sender,
         'to': receiver,
@@ -38,8 +35,6 @@ def send_sms(mobile):
         # 'statusCallback': statusCallBack,
         'signature': signature 
     }).encode('ascii')
-    print("=====")
-    print(formData)
 
     sig = signer.Signer()
     sig.Key = APP_KEY
@@ -50,12 +45,9 @@ def send_sms(mobile):
     r.body = formData
 
     sig.Sign(r)
-    # print(r.headers["X-Sdk-Date"])
-    # print("=======")
-    # print(r.headers["Authorization"])
+
     resp = requests.request(r.method, r.scheme + "://" + r.host + r.uri, headers=r.headers, data=r.body, verify=False)
-    print(resp.status_code, resp.reason)
-    print(resp.content)
+    current_app.logger.debug(f"短信发送结果：{resp.status_code, resp.reason, resp.content}")
     if resp.status_code == 200:
         return resp,code
     else:
